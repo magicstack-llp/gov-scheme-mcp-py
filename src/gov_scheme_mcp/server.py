@@ -1,3 +1,4 @@
+
 """Government Scheme MCP Server implementation."""
 
 from typing import Any, Optional, List, Union
@@ -76,6 +77,11 @@ async def create_scheme(
     department: Optional[str] = None,
     category: Optional[str] = None,
     benefit_type: Optional[str] = None,
+    benifit_details: Optional[str] = None,
+    terms_and_conditions: Optional[str] = None,
+    scheme_raw_text: Optional[str] = None,
+    official_website: Optional[str] = None,
+    application_link: Optional[str] = None,
     url: Optional[str] = None,
     contact: Optional[str] = None,
     min_age: Optional[int] = None,
@@ -106,6 +112,11 @@ async def create_scheme(
         department: Department offering the scheme
         category: Program domain (education, health, agriculture, housing, women, child, senior, disability, minority, entrepreneurship, employment, skill, welfare)
         benefit_type: Type of benefit (cash, subsidy, scholarship, loan, insurance, pension, grant, in-kind)
+        benifit_details: Detailed description of the benefit structure, payouts, timelines
+        terms_and_conditions: Terms and conditions text for the scheme
+        scheme_raw_text: Raw, unstructured text of scheme details scraped or provided
+        official_website: Official scheme website URL
+        application_link: Direct application form/link URL
         url: Official URL for the scheme
         contact: Contact information
         min_age: Minimum age requirement
@@ -135,6 +146,11 @@ async def create_scheme(
     if department is not None: data["department"] = department
     if category is not None: data["category"] = category
     if benefit_type is not None: data["benefit_type"] = benefit_type
+    if benifit_details is not None: data["benifit_details"] = benifit_details
+    if terms_and_conditions is not None: data["terms_and_conditions"] = terms_and_conditions
+    if scheme_raw_text is not None: data["scheme_raw_text"] = scheme_raw_text
+    if official_website is not None: data["official_website"] = official_website
+    if application_link is not None: data["application_link"] = application_link
     if url is not None: data["url"] = url
     if contact is not None: data["contact"] = contact
     if min_age is not None: data["min_age"] = min_age
