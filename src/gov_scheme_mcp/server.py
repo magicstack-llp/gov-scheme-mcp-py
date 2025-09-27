@@ -195,6 +195,104 @@ async def read_scheme(id: int) -> str:
         return str(e)
 
 @mcp.tool()
+async def update_scheme(
+    id: int,
+    code: Optional[str] = None,
+    name: Optional[str] = None,
+    description: Optional[str] = None,
+    department: Optional[str] = None,
+    category: Optional[str] = None,
+    benefit_type: Optional[str] = None,
+    benifit_details: Optional[str] = None,
+    terms_and_conditions: Optional[str] = None,
+    scheme_raw_text: Optional[str] = None,
+    official_website: Optional[str] = None,
+    application_link: Optional[str] = None,
+    url: Optional[str] = None,
+    contact: Optional[str] = None,
+    min_age: Optional[int] = None,
+    max_age: Optional[int] = None,
+    genders: Optional[List[str]] = None,
+    income_min: Optional[float] = None,
+    income_max: Optional[float] = None,
+    employment_status: Optional[List[str]] = None,
+    disabilities: Optional[List[str]] = None,
+    social_categories: Optional[List[str]] = None,
+    marital_statuses: Optional[List[str]] = None,
+    religions: Optional[List[str]] = None,
+    states: Optional[List[str]] = None,
+    districts: Optional[List[str]] = None,
+    urban_rural: Optional[List[str]] = None,
+    professions: Optional[List[str]] = None,
+    required_documents: Optional[List[str]] = None,
+    caste_required: Optional[bool] = None,
+    domicile_required: Optional[bool] = None,
+    is_active: Optional[bool] = None,
+) -> str:
+    """Update a government scheme record by ID. Pass only fields to change.
+
+    Args:
+        id: The numeric ID of the scheme to update
+        Other params: Same as in `create_scheme`; only provided values will be updated
+    """
+    payload = {}
+    if code is not None: payload["code"] = code
+    if name is not None: payload["name"] = name
+    if description is not None: payload["description"] = description
+    if department is not None: payload["department"] = department
+    if category is not None: payload["category"] = category
+    if benefit_type is not None: payload["benefit_type"] = benefit_type
+    if benifit_details is not None: payload["benifit_details"] = benifit_details
+    if terms_and_conditions is not None: payload["terms_and_conditions"] = terms_and_conditions
+    if scheme_raw_text is not None: payload["scheme_raw_text"] = scheme_raw_text
+    if official_website is not None: payload["official_website"] = official_website
+    if application_link is not None: payload["application_link"] = application_link
+    if url is not None: payload["url"] = url
+    if contact is not None: payload["contact"] = contact
+    if min_age is not None: payload["min_age"] = min_age
+    if max_age is not None: payload["max_age"] = max_age
+    if genders is not None: payload["genders"] = genders
+    if income_min is not None: payload["income_min"] = income_min
+    if income_max is not None: payload["income_max"] = income_max
+    if employment_status is not None: payload["employment_status"] = employment_status
+    if disabilities is not None: payload["disabilities"] = disabilities
+    if social_categories is not None: payload["social_categories"] = social_categories
+    if marital_statuses is not None: payload["marital_statuses"] = marital_statuses
+    if religions is not None: payload["religions"] = religions
+    if states is not None: payload["states"] = states
+    if districts is not None: payload["districts"] = districts
+    if urban_rural is not None: payload["urban_rural"] = urban_rural
+    if professions is not None: payload["professions"] = professions
+    if required_documents is not None: payload["required_documents"] = required_documents
+    if caste_required is not None: payload["caste_required"] = caste_required
+    if domicile_required is not None: payload["domicile_required"] = domicile_required
+    if is_active is not None: payload["is_active"] = is_active
+
+    if not payload:
+        return json.dumps({"error": "No fields provided to update"})
+
+    try:
+        updated = await http_request("PUT", f"/api/schemes/{id}", payload)
+        return json.dumps(updated)
+    except Exception as e:
+        return str(e)
+
+@mcp.tool()
+async def delete_scheme(id: int) -> str:
+    """Delete a scheme by ID.
+
+    Args:
+        id: The numeric ID of the scheme to delete
+    """
+    try:
+        res = await http_request("DELETE", f"/api/schemes/{id}")
+        if res is None:
+            return json.dumps({"deleted": True, "id": id})
+        return json.dumps(res)
+    except Exception as e:
+        return str(e)
+
+@mcp.tool()
 async def search_schemes(
     q: Optional[str] = None,
     age: Optional[Union[int, str]] = None,

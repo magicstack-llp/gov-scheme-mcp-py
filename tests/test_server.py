@@ -3,7 +3,7 @@
 import pytest
 import json
 from unittest.mock import AsyncMock, patch
-from gov_scheme_mcp.server import health, http_request, create_scheme
+from gov_scheme_mcp.server import health, http_request, create_scheme, update_scheme, delete_scheme
 
 
 class TestHTTPRequest:
@@ -77,6 +77,50 @@ class TestCreateScheme:
             assert payload_capture.get("official_website") == "https://example.gov/scheme"
             assert payload_capture.get("application_link") == "https://example.gov/apply"
             assert data["id"] == 1
+
+
+class TestUpdateDeleteScheme:
+    @pytest.mark.asyncio
+    async def test_update_scheme_calls_patch_with_payload(self):
+        captured = {"method": None, "url": None, "body": None}
+
+        async def fake_http_request(method, url_path, body=None):
+            captured["method"] = method
+            captured["url"] = url_path
+            captured["body"] = body
+            return {"id": 123, **(body or {})}
+
+        with patch('gov_scheme_mcp.server.http_request', new=AsyncMock(side_effect=fake_http_request)):
+            res = await update_scheme(
+                123,
+                name="Updated Name",
+                official_website="https://example.gov/updated",
+                is_active=False,
+            )
+            data = json.loads(res)
+            assert captured["method"] == "PATCH"
+            assert captured["url"].endswith("/api/schemes/123")
+            assert captured["body"]["name"] == "Updated Name"
+            assert captured["body"]["official_website"] == "https://example.gov/updated"
+            assert captured["body"]["is_active"] is False
+            assert data["id"] == 123
+
+    @pytest.mark.asyncio
+    async def test_delete_scheme_calls_delete(self):
+        captured = {"method": None, "url": None}
+
+        async def fake_http_request(method, url_path, body=None):
+            captured["method"] = method
+            captured["url"] = url_path
+            return {"deleted": True, "id": 456}
+
+        with patch('gov_scheme_mcp.server.http_request', new=AsyncMock(side_effect=fake_http_request)):
+            res = await delete_scheme(456)
+            data = json.loads(res)
+            assert captured["method"] == "DELETE"
+            assert captured["url"].endswith("/api/schemes/456")
+            assert data["deleted"] is True
+            assert data["id"] == 456
 
 
 if __name__ == "__main__":

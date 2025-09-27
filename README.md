@@ -59,7 +59,12 @@ Create a new government scheme record with comprehensive metadata.
 -   `department`: Government department
 -   `category`: Program domain (education, health, agriculture, etc.)
 -   `benefit_type`: Type of benefit (cash, subsidy, scholarship, loan, insurance, pension, grant, in-kind)
--   `url`: Official scheme URL
+-   `benifit_details`: Detailed description of benefit structure, payouts, and timelines
+-   `terms_and_conditions`: Terms and conditions text for the scheme
+-   `scheme_raw_text`: Raw, unstructured text of scheme details
+-   `official_website`: Official scheme website URL
+-   `application_link`: Direct application form/link URL
+-   `url`: Official scheme URL (legacy field)
 -   `contact`: Contact information
 -   Demographics: `min_age`, `max_age`, `genders`
 -   Economic: `income_min`, `income_max`, `employment_status`
@@ -75,6 +80,23 @@ Fetch a single scheme by numeric ID.
 **Parameters**:
 
 -   `id`: Numeric scheme ID
+
+### `update_scheme(id, ...)`
+
+Update an existing scheme by ID. Only provided fields will be changed.
+
+**Parameters**:
+
+-   `id`: Numeric scheme ID to update
+-   All other fields are the same as `create_scheme(...)` and are optional
+
+### `delete_scheme(id)`
+
+Delete a scheme by ID.
+
+**Parameters**:
+
+-   `id`: Numeric scheme ID to delete
 
 ### `search_schemes(...)`
 
@@ -162,6 +184,8 @@ This MCP server requires a compatible government schemes API with the following 
 -   `GET /`: Health check endpoint
 -   `POST /api/schemes`: Create new scheme
 -   `GET /api/schemes/{id}`: Retrieve scheme by ID
+-   `PATCH /api/schemes/{id}`: Update scheme by ID (partial update)
+-   `DELETE /api/schemes/{id}`: Delete scheme by ID
 -   `POST /api/schemes/search`: Search schemes with filters
 
 ## License
